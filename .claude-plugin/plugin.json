@@ -1,0 +1,10 @@
+{
+  "name": "good-to-great-anything",
+  "version": "1.0.0",
+  "description": "Push any subject (business first, but also products, teams, nonprofits, careers, projects) through Good to Great gates to produce its great version: hedgehog, flywheel, plan.",
+  "author": { "name": "KShervington" },
+  "homepage": "https://github.com/KShervington/good-to-great-anything",
+  "repository": "https://github.com/KShervington/good-to-great-anything",
+  "license": "MIT",
+  "keywords": ["strategy", "good-to-great", "jim-collins", "hedgehog-concept", "flywheel", "planning"]
+}

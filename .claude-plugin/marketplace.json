@@ -1,0 +1,11 @@
+{
+  "name": "good-to-great-anything",
+  "owner": { "name": "KShervington" },
+  "plugins": [
+    {
+      "name": "good-to-great-anything",
+      "source": "./",
+      "description": "Push any subject through Good to Great gates to produce its great version: hedgehog, flywheel, plan."
+    }
+  ]
+}
