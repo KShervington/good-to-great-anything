@@ -25,7 +25,7 @@ Principle: good is the enemy of great. Most subjects stay good because good is c
    - `CONDITIONAL`: proceed, but log the open issue in the final Risk Register. Every CONDITIONAL must name its specific condition and the evidence that would turn it into a PASS. If more than half the gates come out CONDITIONAL, say so plainly. The cause is usually one or two shared root problems, so name them.
    - `FAIL`: stop and resolve the issue, or loop back to an earlier gate. Fails at Gates 0 and 1 end the run with an explanation.
 5. **Translate the vocabulary** to fit the subject type (see the table below). Don't force business language onto a career or a band.
-6. **Synthesize** the final deliverable (see Output). When the session offers a Docs artifact type, deliver it as a doc. Otherwise, use a well-structured markdown file.
+6. **Synthesize** the final deliverable (see Output), then present it as the report page (see Presenting the report).
 
 ### Vocabulary map
 
@@ -186,6 +186,15 @@ Lead with the result, not the process. **Open the reply with a one-screen verdic
 10. **Re-check:** offer once to set up a scheduled task about 90 days out. It should re-score the scorecard with real numbers and re-run Gates 1, 5 and 8. Without that loop, the skill never finds out whether its verdicts were right.
 11. **Risk register:** every `CONDITIONAL` item plus the decline risks from Gate 10.
 12. **Gate log:** one line per gate with its verdict. Keep this short. Count the verdicts from the table itself before you write any summary of them.
+
+### Presenting the report
+
+A long markdown report is hard to take in, so present the deliverable as a guided web page:
+1. Copy `assets/report-template.html` (in this skill's folder) to a new file named after the subject, such as `linewright-good-to-great.html`.
+2. Replace only the JSON inside its `<script type="application/json" id="report-data">` block. Follow `assets/report-schema.md`. Use the same content and wording as the analysis, in short strings, with `[ASSUMPTION]` tags kept.
+3. Share the page the way the session allows: as an artifact if one can be published, otherwise as a file link. Still post the one-screen verdict as text in the reply.
+
+If you can't create files, reply with the deliverable as markdown, in the section order above.
 
 ## Guardrails
 

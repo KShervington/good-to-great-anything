@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Good to Great report</title>
+<!--
+  Good to Great: Anything, report page (guided walkthrough).
+  To fill it in, replace ONLY the JSON inside <script type="application/json" id="report-data">.
+  The schema is in report-schema.md next to this file. Everything else renders from that data.
+  Self-contained: no network, no external fonts or scripts.
+-->
+<style>
+:root {
+  --bg: #f6f5f2; --surface: #fcfcfb; --surface-2: #f0efec; --line: #e4e3df;
+  --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #6f6e69;
+  --accent: #2a78d6; --accent-ink: #1c5cab; --accent-soft: #e3eefb;
+  --c1: #2a78d6; --c1-soft: rgba(42,120,214,.13);
+  --c2: #eb6834; --c2-soft: rgba(235,104,52,.13);
+  --c3: #1baf7a; --c3-soft: rgba(27,175,122,.13);
+  --good: #0a7d0a; --good-soft: #e3f3e3;
+  --warn: #7a5000; --warn-soft: #fdf0d2; --warn-mark: #eda100;
+  --bad: #c22d2c; --bad-soft: #fbe3e3;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.04);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121211; --surface: #1a1a19; --surface-2: #252523; --line: #383835;
+    --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #9a998f;
+    --accent: #5598e7; --accent-ink: #86b6ef; --accent-soft: rgba(85,152,231,.16);
+    --c1: #3987e5; --c1-soft: rgba(57,135,229,.2);
+    --c2: #d95926; --c2-soft: rgba(217,89,38,.2);
+    --c3: #199e70; --c3-soft: rgba(25,158,112,.2);
+    --good: #4cc24c; --good-soft: rgba(12,163,12,.18);
+    --warn: #f3c14f; --warn-soft: rgba(237,161,0,.18); --warn-mark: #c98500;
+    --bad: #f07a79; --bad-soft: rgba(227,73,72,.2);
+    --shadow: none; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 80px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+strong { font-weight: 650; }
+code { font: .9em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--surface-2); padding: .05em .35em; border-radius: 5px; }
+button { font: inherit; }
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* top bar + progress */
+.topbar { position: sticky; top: 0; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); }
+.topbar .bar { display: flex; align-items: center; gap: 10px; height: 54px; }
+.topbar .sub { display: block; }
+.brand { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 14px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn[disabled] { opacity: .4; cursor: default; }
+select.jump { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 10px; font: inherit; font-size: 14px; max-width: 46vw; }
+.progress { display: flex; gap: 4px; padding: 0 0 10px; }
+.progress button { flex: 1; height: 6px; padding: 0; border: 0; border-radius: 999px; background: var(--line); cursor: pointer; }
+.progress button.done { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.progress button.current { background: var(--accent); }
+body.all .progress, body.all select.jump { display: none; }
+.nav-all { display: none; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; }
+.nav-all::-webkit-scrollbar { display: none; }
+.nav-all a { color: var(--ink-2); text-decoration: none; font-size: 14px; padding: 4px 10px; border-radius: 999px; white-space: nowrap; background: var(--surface-2); }
+body.all .nav-all { display: flex; }
+
+/* steps */
+main { padding-bottom: 120px; }
+body.walk .step:not(.current) { display: none; }
+.step { padding: 32px 0 8px; animation: in .25s ease-out; }
+body.all .step { padding-top: 48px; animation: none; }
+@keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .step { animation: none; } }
+.kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-3); margin-bottom: 10px; }
+.kicker .stepno { font-weight: 650; color: var(--accent-ink); }
+.takeaway { font-size: clamp(24px, 3.6vw, 34px); line-height: 1.2; letter-spacing: -.015em; margin: 0 0 10px; max-width: 32ch; font-weight: 700; }
+.why { color: var(--ink-2); margin: 0 0 22px; max-width: 68ch; font-size: 17px; }
+
+/* pager */
+.pager { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--bg); border-top: 1px solid var(--line); }
+.pager .wrap { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 64px; }
+.pager .pos { color: var(--ink-3); font-size: 14px; font-variant-numeric: tabular-nums; }
+.pager .btn { padding: 10px 18px; max-width: 42vw; overflow: hidden; text-overflow: ellipsis; }
+body.all .pager { display: none; }
+.hint { text-align: center; color: var(--ink-3); font-size: 13px; margin-top: 28px; }
+body.all .hint { display: none; }
+@media (hover: none) { .hint .keys { display: none; } }
+
+/* chips, cards */
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+.chip.state-good { background: var(--accent-soft); color: var(--accent-ink); }
+.chip.state-great { background: var(--good-soft); color: var(--good); }
+.chip.state-turnaround { background: var(--warn-soft); color: var(--warn); }
+.chip.state-notyet { background: var(--bad-soft); color: var(--bad); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); }
+.card h3, .label { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-weight: 650; }
+.card p { margin: 0; }
+.grid2 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 820px) { .grid2, .grid3, .two { grid-template-columns: 1fr; } }
+.stack { display: grid; gap: 12px; }
+.mt { margin-top: 16px; }
+.small { font-size: 14px; color: var(--ink-2); }
+.quote { font-size: 20px; line-height: 1.45; font-weight: 550; margin: 0; }
+.card.urgent { border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.card.urgent h3 { color: var(--bad); }
+.callout { border-radius: 12px; padding: 14px 16px; background: var(--surface-2); }
+.callout.bad { background: var(--bad-soft); }
+.callout.bad b { color: var(--bad); }
+.callout.good { background: var(--good-soft); }
+.prose { font-size: 17px; max-width: 70ch; }
+
+/* meter */
+.meter-num { font-size: 40px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
+.meter-num small { font-size: 16px; color: var(--ink-3); font-weight: 500; }
+.meter-bar { position: relative; height: 10px; border-radius: 999px; background: var(--surface-2); margin: 12px 0 6px; overflow: hidden; }
+.meter-bar span { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: var(--accent); }
+.meter-scale { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-3); }
+.confidence { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-2); }
+.confidence b { color: var(--ink); }
+
+/* small numbered list */
+.pills { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pills li { display: flex; gap: 10px; align-items: baseline; }
+.pills .n { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+ul.plain { margin: 0; padding-left: 20px; }
+ul.plain li + li { margin-top: 4px; }
+
+/* gate strip */
+.gates { display: grid; grid-template-columns: repeat(11, 1fr); gap: 6px; }
+@media (max-width: 900px) { .gates { grid-template-columns: repeat(6, 1fr); } }
+@media (max-width: 480px) { .gates { grid-template-columns: repeat(4, 1fr); } }
+.gate { border-radius: 10px; padding: 8px 4px; text-align: center; font-size: 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--line); line-height: 1.25; }
+.gate .g { font-weight: 700; font-size: 13px; display: block; }
+.gate .nm { color: var(--ink-2); display: block; min-height: 2.5em; }
+.gate .v { display: block; margin-top: 2px; font-weight: 700; font-size: 11px; }
+.gate.PASS { border-top-color: var(--good); } .gate.PASS .v { color: var(--good); }
+.gate.CONDITIONAL { border-top-color: var(--warn-mark); } .gate.CONDITIONAL .v { color: var(--warn); }
+.gate.FAIL { border-top-color: var(--bad); } .gate.FAIL .v { color: var(--bad); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+
+/* hedgehog */
+.hh { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
+@media (max-width: 820px) { .hh { grid-template-columns: 1fr; } .hh svg { max-width: 280px; margin: 0 auto; display: block; } }
+.ccard { border-left: 4px solid var(--c); border-radius: 0 var(--radius) var(--radius) 0; }
+.ccard .kept { font-weight: 600; margin: 0 0 6px; }
+.ccard .out { margin: 0; padding: 0; list-style: none; color: var(--ink-3); font-size: 14px; }
+.ccard .out li::before { content: "\2715  "; font-size: 11px; }
+.tests { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tests li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: baseline; }
+
+/* flywheel */
+.fw { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: start; }
+@media (max-width: 820px) { .fw { grid-template-columns: 1fr; } .fw svg { max-width: 290px; margin: 0 auto; display: block; } }
+.fw-steps { list-style: none; margin: 0; padding: 0; }
+.fw-steps li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+.fw-steps li:last-child { border-bottom: 0; }
+.fw-steps .dot { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center; }
+.fw-steps .weak { grid-column: 2; color: var(--bad); font-size: 14px; font-weight: 650; }
+
+/* numbered cards */
+.numlist { counter-reset: n; list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.numlist > li { counter-increment: n; position: relative; padding: 14px 16px 14px 56px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.numlist > li::before { content: counter(n); position: absolute; left: 16px; top: 14px; width: 26px; height: 26px; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); font-weight: 700; font-size: 13px; display: grid; place-items: center; }
+.numlist.stop > li::before { content: "\2715"; background: var(--bad-soft); color: var(--bad); }
+.numlist .t { font-weight: 650; }
+.numlist .d { color: var(--ink-2); margin-top: 2px; }
+
+/* facts */
+.facts { display: grid; gap: 10px; }
+.fact { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: start; padding: 14px 16px; }
+.sev { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; border-radius: 6px; text-align: center; }
+.sev.high { background: var(--bad-soft); color: var(--bad); }
+.sev.medium { background: var(--warn-soft); color: var(--warn); }
+.sev.low, .sev.note { background: var(--surface-2); color: var(--ink-2); }
+.fact .t { font-weight: 650; }
+.fact .e { color: var(--ink-2); font-size: 15px; margin-top: 2px; }
+.fact .o { color: var(--ink-3); font-size: 13px; margin-top: 4px; }
+
+/* bus */
+.bus { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.bus h4 { margin: 0 0 8px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.bus h4 .sw { width: 10px; height: 10px; border-radius: 3px; background: var(--sw); }
+.bus-item { padding: 10px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); margin-bottom: 8px; }
+.bus-item .w { font-weight: 650; }
+.bus-item .y { color: var(--ink-2); font-size: 14px; margin-top: 2px; }
+
+/* timeline */
+.timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+.timeline::before { content: ""; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+.timeline li { position: relative; padding: 0 0 18px 44px; }
+.timeline li::before { content: attr(data-n); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center; }
+.timeline .t { font-weight: 650; }
+.timeline .meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+.timeline .d { color: var(--ink-2); }
+
+/* tables -> cards on phones */
+.table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; background: var(--surface-2); padding: 10px 14px; }
+td { padding: 12px 14px; border-top: 1px solid var(--line); vertical-align: top; }
+td:first-child { font-weight: 600; }
+@media (max-width: 700px) {
+  table, thead, tbody, tr, td { display: block; }
+  thead { display: none; }
+  tr { padding: 10px 14px; border-top: 1px solid var(--line); }
+  tr:first-child { border-top: 0; }
+  td { border: 0; padding: 4px 0; }
+  td::before { content: attr(data-label); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; }
+}
+.vpill { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+.vpill.PASS { background: var(--good-soft); color: var(--good); }
+.vpill.CONDITIONAL { background: var(--warn-soft); color: var(--warn); }
+.vpill.FAIL { background: var(--bad-soft); color: var(--bad); }
+.vpill.OTHER { background: var(--surface-2); color: var(--ink-2); }
+
+.assume-tag { font-size: 11px; font-weight: 700; color: var(--warn); background: var(--warn-soft); padding: 1px 6px; border-radius: 4px; margin: 0 2px; white-space: nowrap; cursor: help; }
+details.more { margin-top: 14px; }
+details.more summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+footer { margin: 48px 0 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+body.walk footer { display: none; }
+body.walk .step.last ~ footer { display: block; }
+
+@media print {
+  .topbar, .pager, .hint { display: none !important; }
+  body { background: #fff; }
+  .step { display: block !important; padding-top: 24px; animation: none; break-inside: auto; }
+  .card, .table-wrap, .numlist > li, .bus-item { box-shadow: none; break-inside: avoid; }
+  footer { display: block !important; }
+  main { padding-bottom: 0; }
+}
+</style>
+</head>
+<body class="walk">
+
+<!-- ===== REPORT DATA: replace the JSON below, nothing else. Schema: report-schema.md ===== -->
+<script type="application/json" id="report-data">
+{
+  "subject": "Example subject",
+  "subject_type": "Product / app",
+  "as_of": "today",
+  "mode": "autonomous",
+  "state": "good",
+  "verdict": {
+    "headline": "Good, not yet great. Replace this JSON with the run's results.",
+    "hedgehog": "One sentence: what it can be best in the world at, what drives its engine, and what its people care about.",
+    "weakest_link": "The weakest link in the flywheel.",
+    "top_stop": ["First thing to stop", "Second", "Third"],
+    "brutal_fact": "The single most urgent brutal fact.",
+    "missing_numbers": ["A number that would change the answer"],
+    "confidence": { "level": "moderate", "rests_on": "What the verdict rests on." }
+  },
+  "greatness_potential": 40,
+  "gates": [
+    { "n": 0, "name": "Fit", "verdict": "PASS" }, { "n": 1, "name": "Baseline", "verdict": "PASS" },
+    { "n": 2, "name": "Level 5", "verdict": "PASS" }, { "n": 3, "name": "First Who", "verdict": "PASS" },
+    { "n": 4, "name": "Brutal facts", "verdict": "PASS" }, { "n": 5, "name": "Hedgehog", "verdict": "CONDITIONAL" },
+    { "n": 6, "name": "Discipline", "verdict": "PASS" }, { "n": 7, "name": "Technology", "verdict": "PASS" },
+    { "n": 8, "name": "Flywheel", "verdict": "PASS" }, { "n": 9, "name": "Built to Last", "verdict": "PASS" },
+    { "n": 10, "name": "Mighty Fall", "verdict": "PASS" }
+  ]
+}
+</script>
+<!-- ===== END REPORT DATA ===== -->
+
+<header class="topbar">
+  <div class="wrap bar">
+    <div class="brand" id="brand"></div>
+    <select class="jump" id="jump" aria-label="Jump to step"></select>
+    <button class="btn" id="mode" type="button" aria-pressed="false">Show all</button>
+  </div>
+  <div class="wrap sub"><div class="progress" id="progress" aria-label="Progress"></div><nav class="nav-all" id="navall" aria-label="Sections"></nav></div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<nav class="pager" aria-label="Step navigation">
+  <div class="wrap">
+    <button class="btn" id="prev" type="button">&larr; Back</button>
+    <span class="pos" id="pos"></span>
+    <button class="btn primary" id="next" type="button">Next &rarr;</button>
+  </div>
+</nav>
+
+<script>
+(function () {
+  "use strict";
+  var D;
+  try { D = JSON.parse(document.getElementById("report-data").textContent); }
+  catch (e) {
+    document.getElementById("app").innerHTML = '<div class="card" style="margin-top:32px"><h3>Report data could not be read</h3><p>The JSON block at the top of this file is not valid: ' + String(e.message).replace(/[<&]/g, "") + "</p></div>";
+    return;
+  }
+
+  // ---------- helpers ----------
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function fmt(s) {
+    var h = esc(s);
+    h = h.replace(/`?\[ASSUMPTION(?::)?\s*([^\]]*)\]`?/gi, function (_, note) {
+      note = note.trim();
+      return '<span class="assume-tag" title="' + (note ? "Assumption: " + note : "Assumption: not in the evidence") + '">ASSUMPTION' + (note ? ": " + note : "") + "</span>";
+    });
+    h = h.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    h = h.replace(/(^|[^*\w])\*([^*\n]+)\*(?=[^*\w]|$)/g, "$1<em>$2</em>");
+    h = h.replace(/`([^`]+)`/g, "<code>$1</code>");
+    return h;
+  }
+  function arr(x) { return Array.isArray(x) ? x : (x == null || x === "" ? [] : [x]); }
+  function txt(x) { return typeof x === "string" ? x : (x && (x.text || x.item || x.label || x.action)) || ""; }
+  function plain(s) { return String(s || "").replace(/`?\[ASSUMPTION[^\]]*\]`?/gi, "").replace(/\*\*|`/g, "").replace(/\s+/g, " ").trim(); }
+  function list(items) { return '<ul class="plain">' + items.map(function (i) { return "<li>" + fmt(txt(i)) + "</li>"; }).join("") + "</ul>"; }
+  function sevRank(s) { var r = { high: 0, medium: 1, low: 2 }[String(s || "").toLowerCase()]; return r === undefined ? 3 : r; }
+
+  var STATE = {
+    not_yet_good: { label: "Not yet good", cls: "state-notyet" },
+    good: { label: "Good, not yet great", cls: "state-good" },
+    turnaround: { label: "Turnaround", cls: "state-turnaround" },
+    already_great: { label: "Already great: stewardship mode", cls: "state-great" }
+  };
+  var st = STATE[D.state] || STATE.good;
+  var steward = D.state === "already_great";
+  var notYet = D.state === "not_yet_good";
+  var V = D.verdict || {};
+  var T = D.takeaways || {};
+  var steps = [];
+  function step(id, title, takeaway, why, body) { if (body) steps.push({ id: id, title: title, takeaway: takeaway, why: why, body: body }); }
+
+  document.title = (D.subject ? D.subject + ": " : "") + "Good to Great";
+  document.getElementById("brand").textContent = D.subject || "Good to Great";
+
+  // ---------- 1. verdict ----------
+  var gp = typeof D.greatness_potential === "number" ? Math.max(0, Math.min(100, Math.round(D.greatness_potential))) : null;
+  var conf = V.confidence || {};
+  var gates = arr(D.gates);
+  var hedge = notYet ? ((D.not_yet_good && D.not_yet_good.what_good_looks_like) || "") : (V.hedgehog || (D.hedgehog && D.hedgehog.sentence) || "");
+  var stopTop = arr(steward ? (V.temptations || V.top_stop) : V.top_stop).slice(0, 3);
+  var v = '<div class="kicker"><span class="chip ' + st.cls + '">' + esc(st.label) + "</span>" +
+      (D.subject_type ? "<span>" + esc(D.subject_type) + "</span>" : "") + (D.as_of ? "<span>&middot; as of " + esc(D.as_of) + "</span>" : "") + "</div>" +
+    '<div class="grid2"><div class="card"><h3>' + (notYet ? "What good would look like" : steward ? "The Hedgehog it lives by" : "Hedgehog Concept") + '</h3><p class="quote">' + fmt(hedge) + "</p></div>" +
+    '<div class="card"><h3>Greatness potential</h3>' + (gp != null ? '<div class="meter-num">' + gp + ' <small>/ 100</small></div><div class="meter-bar" role="img" aria-label="Greatness potential ' + gp + ' out of 100"><span style="width:' + gp + '%"></span></div><div class="meter-scale"><span>stays good</span><span>becomes great</span></div>' : '<p class="small">Not scored.</p>') +
+      (conf.level || conf.rests_on ? '<div class="confidence"><b>Confidence: ' + esc(conf.level || "") + ".</b> " + fmt(conf.rests_on || "") + "</div>" : "") + "</div></div>" +
+    '<div class="grid3 mt">' +
+      (V.brutal_fact ? '<div class="card urgent"><h3>Most urgent fact</h3><p>' + fmt(V.brutal_fact) + "</p></div>" : "") +
+      (V.weakest_link ? '<div class="card"><h3>Weakest flywheel link</h3><p>' + fmt(V.weakest_link) + "</p></div>" : "") +
+      (stopTop.length ? '<div class="card"><h3>' + (steward ? "Temptations to refuse" : "Stop doing") + '</h3><ul class="pills">' + stopTop.map(function (s, i) { return '<li><span class="n">' + (i + 1) + "</span><span>" + fmt(txt(s)) + "</span></li>"; }).join("") + "</ul></div>" : "") +
+    "</div>" +
+    (arr(V.missing_numbers).length ? '<div class="card mt"><h3>Numbers that would change this answer</h3>' + list(arr(V.missing_numbers)) + "</div>" : "") +
+    (gates.length ? '<div class="mt"><div class="label">Gates</div><div class="gates" role="list">' + gates.map(function (g) {
+      var vv = String(g.verdict || "").toUpperCase();
+      var icon = vv === "PASS" ? "✓ " : vv === "FAIL" ? "✕ " : vv === "CONDITIONAL" ? "! " : "";
+      return '<div class="gate ' + esc(vv) + '" role="listitem" title="' + esc("Gate " + g.n + " " + (g.name || "") + ": " + vv + (g.note ? ". " + plain(g.note) : "")) + '"><span class="g">G' + esc(g.n) + '</span><span class="nm">' + esc(g.name || "") + '</span><span class="v">' + icon + esc(vv === "CONDITIONAL" ? "COND." : vv) + "</span></div>";
+    }).join("") + '</div><div class="legend"><span>✓ pass</span><span>! conditional: go on, issue logged</span><span>✕ fail: stop and fix</span></div></div>' : "");
+  step("verdict", "Verdict", V.headline || "Verdict", "", v);
+
+  // ---------- not yet good: milestones ----------
+  if (notYet && D.not_yet_good) {
+    var ny = D.not_yet_good, ms = arr(ny.milestones);
+    step("milestones", "Prove it's good", T.milestones || "First, prove the core works on its own",
+      ny.why || "Greatness work built on a core that doesn't work yet would be built on sand.",
+      ms.length ? '<ol class="numlist">' + ms.map(function (m) { return '<li><div class="t">' + fmt(txt(m)) + "</div>" + (m.evidence ? '<div class="d">' + fmt(m.evidence) + "</div>" : "") + "</li>"; }).join("") + "</ol>" : "");
+  }
+
+  // ---------- 2. brutal facts ----------
+  var facts = arr(D.brutal_facts).slice().sort(function (a, b) { return sevRank(a.severity) - sevRank(b.severity); });
+  if (facts.length) {
+    var nHigh = facts.filter(function (f) { return sevRank(f.severity) === 0; }).length;
+    step("facts", "Brutal facts", T.facts || plain(facts[0].fact),
+      facts.length + " facts, " + nHigh + " high severity. Most severe first. Greatness starts with facing these, not explaining them away.",
+      '<div class="facts">' + facts.map(function (f) {
+        var sv = String(f.severity || "note").toLowerCase();
+        return '<div class="card fact"><span class="sev ' + esc(sv) + '">' + esc(sv) + '</span><div><div class="t">' + fmt(f.fact || "") + "</div>" + (f.evidence ? '<div class="e">' + fmt(f.evidence) + "</div>" : "") + (f.owner ? '<div class="o">Owner: ' + esc(f.owner) + "</div>" : "") + "</div></div>";
+      }).join("") + "</div>" +
+      (D.faith_statement ? '<div class="callout good mt"><b>And yet:</b> ' + fmt(D.faith_statement) + "</div>" : "") +
+      (D.truth_climate ? '<p class="small mt"><b>Truth climate:</b> ' + fmt(D.truth_climate) + "</p>" : ""));
+  }
+
+  // ---------- 3. hedgehog ----------
+  var H = D.hedgehog;
+  if (H && !notYet) {
+    var C = H.circles || {};
+    var circ = [
+      { k: "best", title: "Best in the world at", c: "var(--c1)" },
+      { k: "engine", title: /nonprofit|social|civic/i.test(D.subject_type || "") ? "Resource engine" : "Economic engine", c: "var(--c2)" },
+      { k: "passion", title: "Deeply passionate about", c: "var(--c3)" }
+    ];
+    var venn = '<svg viewBox="0 0 280 270" role="img" aria-label="The three circles of the Hedgehog Concept overlap at the star">' +
+      '<circle cx="103" cy="100" r="76" fill="var(--c1-soft)" stroke="var(--c1)" stroke-width="2"/>' +
+      '<circle cx="177" cy="100" r="76" fill="var(--c2-soft)" stroke="var(--c2)" stroke-width="2"/>' +
+      '<circle cx="140" cy="164" r="76" fill="var(--c3-soft)" stroke="var(--c3)" stroke-width="2"/>' +
+      '<text x="70" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Best at</text>' +
+      '<text x="212" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Engine</text>' +
+      '<text x="140" y="218" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Passion</text>' +
+      '<circle cx="140" cy="122" r="16" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>' +
+      '<text x="140" y="127" text-anchor="middle" font-size="15" fill="var(--ink)">★</text>' +
+      '<text x="140" y="262" text-anchor="middle" font-size="12" fill="var(--ink-3)">★ where all three overlap</text></svg>';
+    var cards = circ.map(function (c) {
+      var x = C[c.k] || {};
+      return '<div class="card ccard" style="--c:' + c.c + '"><h3>' + esc(c.title) + '</h3><p class="kept">' + fmt(x.kept || "") + "</p>" +
+        (arr(x.ruled_out).length ? '<ul class="out" aria-label="Ruled out">' + arr(x.ruled_out).map(function (r) { return "<li>" + fmt(txt(r)) + "</li>"; }).join("") + "</ul>" : "") + "</div>";
+    }).join("");
+    var tests = arr(H.tests), conft = arr(H.confirmation_tests);
+    step("hedgehog", steward ? "Hedgehog" : "Hedgehog", T.hedgehog || plain(H.sentence || V.hedgehog),
+      steward ? "The concept it already lives by. Protect it rather than reinvent it." : "The one thing at the overlap of what it can be best at, what drives its engine, and what its people care about. Everything else is a candidate for the stop-doing list.",
+      (D.great_version ? '<div class="callout"><b>' + (steward ? "Staying great looks like this:" : "The great version:") + "</b> " + fmt(D.great_version) + "</div>" : "") +
+      '<div class="hh mt">' + venn + '<div class="stack">' + cards + "</div></div>" +
+      (H.denominator ? '<div class="card mt"><h3>Measure it by</h3><p>' + fmt(H.denominator) + "</p></div>" : "") +
+      (tests.length || conft.length ? '<details class="more"><summary>Tests and how to confirm it</summary><div class="two mt">' +
+        (tests.length ? '<div class="card"><h3>Does it pass the tests?</h3><ul class="tests">' + tests.map(function (t) {
+          var r = String(t.result || ""), cls = /^(yes|pass)/i.test(r) ? "PASS" : /^(mostly|partly|partial)/i.test(r) ? "CONDITIONAL" : /^(no|fail)/i.test(r) ? "FAIL" : "OTHER";
+          return '<li><span class="vpill ' + cls + '">' + esc(r) + "</span><span><b>" + fmt(t.name || "") + "</b> " + fmt(t.note || "") + "</span></li>";
+        }).join("") + "</ul></div>" : "") +
+        (conft.length ? '<div class="card"><h3>Confirm within 90 days</h3><ol style="margin:0;padding-left:20px">' + conft.map(function (t) { return "<li>" + fmt(txt(t)) + "</li>"; }).join("") + "</ol></div>" : "") +
+        "</div></details>" : ""));
+  }
+
+  // ---------- 4. flywheel ----------
+  var F = D.flywheel;
+  if (F && arr(F.steps).length && !notYet) {
+    var fs = arr(F.steps), n = fs.length, R = 108, cx = 150, cy = 145;
+    var wf = F.weakest ? Number(F.weakest.from) : 0, wt = F.weakest ? Number(F.weakest.to) : 0;
+    var ang = function (i) { return -Math.PI / 2 + 2 * Math.PI * i / n; };
+    var arcs = "", nodes = "", i;
+    for (i = 0; i < n; i++) {
+      var a1 = ang(i) + 0.22, a2 = ang(i + 1) - 0.22, weak = wf === i + 1 && wt === (i + 1) % n + 1;
+      arcs += '<path d="M' + (cx + R * Math.cos(a1)).toFixed(1) + " " + (cy + R * Math.sin(a1)).toFixed(1) + " A" + R + " " + R + " 0 0 1 " + (cx + R * Math.cos(a2)).toFixed(1) + " " + (cy + R * Math.sin(a2)).toFixed(1) +
+        '" fill="none" stroke="' + (weak ? "var(--bad)" : "var(--ink-3)") + '" stroke-width="' + (weak ? 3.5 : 2) + '"' + (weak ? ' stroke-dasharray="7 5"' : "") + ' marker-end="url(#' + (weak ? "ahb" : "ah") + ')"/>';
+      nodes += '<circle cx="' + (cx + R * Math.cos(ang(i))).toFixed(1) + '" cy="' + (cy + R * Math.sin(ang(i))).toFixed(1) + '" r="17" fill="var(--accent)"/><text x="' + (cx + R * Math.cos(ang(i))).toFixed(1) + '" y="' + (cy + R * Math.sin(ang(i)) + 5).toFixed(1) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">' + (i + 1) + "</text>";
+    }
+    var wl = "";
+    if (wf) { var am = ang(wf - 0.5); wl = '<text x="' + (cx + (R + 30) * Math.cos(am)).toFixed(1) + '" y="' + (cy + (R + 30) * Math.sin(am) + 4).toFixed(1) + '" text-anchor="middle" font-size="12" font-weight="700" fill="var(--bad)">weakest</text>'; }
+    var ring = '<svg viewBox="0 0 300 290" role="img" aria-label="Flywheel of ' + n + " steps" + (wf ? "; the weakest link runs from step " + wf + " to step " + wt : "") + '">' +
+      '<defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink-3)"/></marker>' +
+      '<marker id="ahb" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--bad)"/></marker></defs>' +
+      arcs + nodes + wl + '<text x="' + cx + '" y="' + (cy - 3) + '" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">each turn</text><text x="' + cx + '" y="' + (cy + 15) + '" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">feeds the next</text></svg>';
+    var fl = '<ol class="fw-steps">' + fs.map(function (s, k) {
+      return '<li><span class="dot">' + (k + 1) + "</span><span><b>" + fmt(s.short || txt(s)) + "</b>" + (s.detail ? '<br><span class="small">' + fmt(s.detail) + "</span>" : "") + "</span>" +
+        (wf === k + 1 ? '<span class="weak">⚠ Weakest link: ' + wf + " → " + wt + "</span>" : "") + "</li>";
+    }).join("") + "</ol>";
+    step("flywheel", "Flywheel", T.flywheel || (wf && fs[wf - 1] && fs[wt - 1] ? "The loop is weakest between “" + plain(fs[wf - 1].short || txt(fs[wf - 1])) + "” and “" + plain(fs[wt - 1].short || txt(fs[wt - 1])) + "”" : "Keep the flywheel turning"),
+      plain(F.weakest && F.weakest.why) || "Momentum comes from pushing the same loop, turn after turn.",
+      '<div class="fw">' + ring + fl + "</div>" +
+      (arr(F.current_push).length ? '<div class="card mt"><h3>Push on these next</h3><ol style="margin:0;padding-left:20px">' + arr(F.current_push).map(function (c) { return "<li>" + fmt(txt(c)) + "</li>"; }).join("") + "</ol></div>" : "") +
+      (F.doom_loop ? '<div class="callout mt"><b>Doom-loop check:</b> ' + fmt(F.doom_loop) + "</div>" : ""));
+  }
+
+  // ---------- 5. stop doing ----------
+  var stops = arr(D.stop_doing);
+  if (stops.length) step("stop", steward ? "Temptations" : "Stop doing",
+    T.stop || (steward ? stops.length + " temptations to refuse" : "Stop " + stops.length + " things that pull it off course"),
+    steward ? "What works should be protected. These are the moves most likely to pull it off course." : "Saying no matters more than the to-do list. Each of these sits outside the Hedgehog Concept, however attractive.",
+    '<ol class="numlist stop">' + stops.map(function (s) { return '<li><div class="t">' + fmt(txt(s)) + "</div>" + (s.why ? '<div class="d">' + fmt(s.why) + "</div>" : "") + "</li>"; }).join("") + "</ol>");
+
+  // ---------- 6. people ----------
+  var bus = arr(D.bus);
+  if (bus.length) {
+    var groups = [
+      { k: "keep", label: "Keep", sw: "var(--good)" }, { k: "move", label: "Keep, change seat", sw: "var(--accent)" },
+      { k: "add", label: "Add or hire", sw: "var(--c3)" }, { k: "not_yet", label: "Not yet", sw: "var(--ink-3)" },
+      { k: "off", label: "Off this bus", sw: "var(--bad)" }
+    ];
+    var adds = bus.filter(function (b) { return String(b.call).toLowerCase() === "add"; });
+    step("people", "People", T.people || (adds.length ? "Add " + plain(adds[0].who).replace(/^missing:\s*/i, "") + " first" : "The right people in the right seats"),
+      "First who, then what. “Off this bus” means wrong for this endeavor, not a judgment of worth.",
+      '<div class="bus">' + groups.map(function (g) {
+        var it = bus.filter(function (b) { return String(b.call || "keep").toLowerCase() === g.k; });
+        return it.length ? '<div><h4><span class="sw" style="--sw:' + g.sw + '"></span>' + g.label + " (" + it.length + ")</h4>" +
+          it.map(function (b) { return '<div class="bus-item"><div class="w">' + fmt(b.who || "") + "</div>" + (b.why ? '<div class="y">' + fmt(b.why) + "</div>" : "") + "</div>"; }).join("") + "</div>" : "";
+      }).join("") + "</div>");
+  }
+
+  // ---------- 7. plan ----------
+  var plan = arr(D.next_90_days), sc = arr(D.scorecard);
+  if (plan.length || sc.length) step("plan", "Next 90 days", T.plan || (plan.length ? "Start here: " + plain(txt(plan[0])) : "Track these numbers"),
+    "What to do, in order, and the numbers that show whether it's working.",
+    (plan.length ? '<ol class="timeline">' + plan.map(function (a, k) {
+      return '<li data-n="' + (k + 1) + '"><div class="t">' + fmt(txt(a)) + '</div><div class="meta">' + (a.owner ? '<span class="chip">' + esc(a.owner) + "</span>" : "") + (a.when ? '<span class="chip">' + esc(a.when) + "</span>" : "") + "</div>" + (a.detail ? '<div class="d">' + fmt(a.detail) + "</div>" : "") + "</li>";
+    }).join("") + "</ol>" : "") +
+    (sc.length ? '<div class="label mt">Scorecard</div><div class="table-wrap"><table><thead><tr><th>Output</th><th>Now</th><th>12-month target</th><th>Long run</th></tr></thead><tbody>' +
+      sc.map(function (r) { return '<tr><td data-label="Output">' + fmt(r.output || "") + '</td><td data-label="Now">' + fmt(r.current || "") + '</td><td data-label="12-month target">' + fmt(r.target || "") + '</td><td data-label="Long run">' + fmt(r.trajectory || "") + "</td></tr>"; }).join("") + "</tbody></table></div>" : ""));
+
+  // ---------- 8. risks ----------
+  var risks = arr(D.risks);
+  if (risks.length) step("risks", "Risks", T.risks || plain(D.shared_root_problems) || risks.length + " risks to watch",
+    "Every open condition, plus the ways this subject could decline. Watch the early warnings; the last column says what would clear each one.",
+    '<div class="table-wrap"><table><thead><tr><th>Risk</th><th>Early warning</th><th>What clears it</th><th>From</th></tr></thead><tbody>' +
+      risks.map(function (r) { return '<tr><td data-label="Risk">' + fmt(r.risk || "") + '</td><td data-label="Early warning">' + fmt(r.warning || "") + '</td><td data-label="What clears it">' + fmt(r.clears || "") + '</td><td data-label="From" class="small">' + fmt(r.source || "") + "</td></tr>"; }).join("") +
+    "</tbody></table></div>" + (D.recheck ? '<div class="callout mt"><b>Re-check:</b> ' + fmt(D.recheck) + "</div>" : ""));
+
+  // ---------- 9. the record ----------
+  var I = D.ideology || {};
+  var tally = { PASS: 0, CONDITIONAL: 0, FAIL: 0 };
+  gates.forEach(function (g) { var x = String(g.verdict || "").toUpperCase(); if (x in tally) tally[x]++; });
+  var rec = (gates.length ? '<div class="table-wrap"><table><thead><tr><th>Gate</th><th>Verdict</th><th>Note</th></tr></thead><tbody>' +
+      gates.map(function (g) { var x = String(g.verdict || "").toUpperCase(); return '<tr><td data-label="Gate">' + esc(g.n) + " " + esc(g.name || "") + '</td><td data-label="Verdict"><span class="vpill ' + (x in tally ? x : "OTHER") + '">' + esc(x) + '</span></td><td data-label="Note">' + fmt(g.note || "") + "</td></tr>"; }).join("") +
+      "</tbody></table></div>" : "") +
+    (I.purpose || I.bhag || arr(I.values).length ? '<div class="two mt">' +
+      '<div class="card"><h3>Core values</h3>' + list(arr(I.values)) + (I.purpose ? '<h3 class="mt">Purpose</h3><p>' + fmt(I.purpose) + "</p>" : "") + "</div>" +
+      '<div class="card">' + (I.bhag ? "<h3>Big goal</h3><p>" + fmt(I.bhag) + "</p>" : "") + (arr(I.mechanisms).length ? '<h3 class="mt">What makes it outlast any one person</h3>' + list(arr(I.mechanisms)) : "") + "</div></div>" : "") +
+    (arr(D.details).length ? '<details class="more"><summary>Gate artifacts and working notes</summary><div class="stack mt">' +
+      arr(D.details).map(function (d) { return '<div class="card"><h3>' + esc(d.title || "") + '</h3><div class="small">' + arr(d.body).map(function (p) { return "<p>" + fmt(txt(p)) + "</p>"; }).join("") + "</div></div>"; }).join("") + "</div></details>" : "");
+  step("record", "Gate log", T.record || tally.PASS + " pass, " + tally.CONDITIONAL + " conditional, " + tally.FAIL + " fail",
+    "The full record: every gate's verdict, the core ideology, and the working notes behind the answer.", rec);
+
+  // ---------- render ----------
+  var N = steps.length;
+  document.getElementById("app").innerHTML = steps.map(function (s, k) {
+    return '<section class="step' + (k === N - 1 ? " last" : "") + '" id="' + s.id + '" aria-labelledby="h-' + s.id + '">' +
+      '<div class="kicker"><span class="stepno">Step ' + (k + 1) + " of " + N + "</span><span>&middot; " + esc(s.title) + "</span></div>" +
+      (k === 0 ? "<h1 class=\"takeaway\" id=\"h-" + s.id + '">' + fmt(s.takeaway) + "</h1>" : '<h2 class="takeaway" id="h-' + s.id + '">' + fmt(s.takeaway) + "</h2>") +
+      (s.why ? '<p class="why">' + fmt(s.why) + "</p>" : "") + s.body +
+      (k === 0 ? '<p class="hint">Use Next to walk through it one idea at a time<span class="keys"> (or the arrow keys)</span>, or Show all to read it as one page.</p>' : "") +
+      "</section>";
+  }).join("") +
+    "<footer>" + (D.assumption_note ? "<p>" + fmt(D.assumption_note) + "</p>" : "") +
+    '<p>Anything marked <span class="assume-tag">ASSUMPTION</span> was inferred, not found in the evidence. Correct it and the conclusions may change.</p>' +
+    "<p>Made with the good-to-great-anything skill, after Jim Collins’s <i>Good to Great</i>. Treat it as disciplined hypotheses to test, not guarantees.</p></footer>";
+
+  var els = Array.prototype.slice.call(document.querySelectorAll(".step"));
+  var prog = document.getElementById("progress"), jump = document.getElementById("jump"), navall = document.getElementById("navall");
+  prog.innerHTML = steps.map(function (s, k) { return '<button type="button" data-i="' + k + '" aria-label="Step ' + (k + 1) + ": " + esc(s.title) + '" title="' + esc(s.title) + '"></button>'; }).join("");
+  jump.innerHTML = steps.map(function (s, k) { return '<option value="' + k + '">' + (k + 1) + ". " + esc(s.title) + "</option>"; }).join("");
+  navall.innerHTML = steps.map(function (s) { return '<a href="#' + s.id + '">' + esc(s.title) + "</a>"; }).join("");
+  var prev = document.getElementById("prev"), next = document.getElementById("next"), pos = document.getElementById("pos"), modeBtn = document.getElementById("mode");
+  var cur = 0, all = false;
+
+  function go(k, push) {
+    cur = Math.max(0, Math.min(N - 1, k));
+    els.forEach(function (e, j) { e.classList.toggle("current", j === cur); });
+    Array.prototype.forEach.call(prog.children, function (b, j) { b.classList.toggle("current", j === cur); b.classList.toggle("done", j < cur); b.setAttribute("aria-current", j === cur ? "step" : "false"); });
+    jump.value = String(cur);
+    pos.textContent = (cur + 1) + " / " + N;
+    prev.disabled = cur === 0;
+    prev.innerHTML = cur > 0 ? "&larr; " + esc(steps[cur - 1].title) : "&larr; Back";
+    next.innerHTML = cur < N - 1 ? esc(steps[cur + 1].title) + " &rarr;" : "Show all";
+    if (push !== false) { try { history.replaceState(null, "", "#" + steps[cur].id); } catch (e) {} }
+    window.scrollTo(0, 0);
+  }
+  function setAll(on) {
+    all = on;
+    document.body.classList.toggle("all", on);
+    document.body.classList.toggle("walk", !on);
+    modeBtn.textContent = on ? "Step through" : "Show all";
+    modeBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    if (on) { var t = els[cur]; if (t && cur > 0) t.scrollIntoView(); else window.scrollTo(0, 0); }
+    else go(cur);
+  }
+  prev.onclick = function () { go(cur - 1); };
+  next.onclick = function () { if (cur < N - 1) go(cur + 1); else setAll(true); };
+  prog.onclick = function (e) { var b = e.target.closest("button"); if (b) go(Number(b.dataset.i)); };
+  jump.onchange = function () { go(Number(jump.value)); };
+  modeBtn.onclick = function () { setAll(!all); };
+  navall.onclick = function (e) { var a = e.target.closest("a"); if (!a) return; var k = steps.findIndex(function (s) { return "#" + s.id === a.getAttribute("href"); }); if (k >= 0) cur = k; };
+  document.addEventListener("keydown", function (e) {
+    if (all || e.altKey || e.ctrlKey || e.metaKey || /input|select|textarea/i.test((e.target.tagName || ""))) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); next.click(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); if (cur > 0) go(cur - 1); }
+    else if (e.key === "Home") go(0); else if (e.key === "End") go(N - 1);
+  });
+  var tx = null, ty = null;
+  document.addEventListener("touchstart", function (e) { if (all) return; tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (all || tx == null) return;
+    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > 2 * Math.abs(dy)) { if (dx < 0 && cur < N - 1) go(cur + 1); else if (dx > 0 && cur > 0) go(cur - 1); }
+    tx = null;
+  }, { passive: true });
+  window.addEventListener("beforeprint", function () { els.forEach(function (e) { e.classList.add("current"); }); });
+  window.addEventListener("afterprint", function () { if (!all) go(cur, false); });
+
+  window.addEventListener("hashchange", function () {
+    if (location.hash === "#all") { if (!all) setAll(true); return; }
+    var k = steps.findIndex(function (s) { return "#" + s.id === location.hash; });
+    if (k >= 0 && !all && k !== cur) go(k, false);
+  });
+  var start = steps.findIndex(function (s) { return "#" + s.id === location.hash; });
+  if (location.hash === "#all") setAll(true); else go(start > 0 ? start : 0, false);
+})();
+</script>
+</body>
+</html>

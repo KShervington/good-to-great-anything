@@ -4,7 +4,9 @@
 
 It runs your subject through the ideas in Jim Collins's *Good to Great* (plus *Built to Last* and *How the Mighty Fall*). Collins wrote about companies, but noted the principles apply more widely, so this skill works on a business, a product, a team, a nonprofit, a career or a side project.
 
-You get a short verdict first, then a plan:
+You get a short verdict in the chat, plus a **guided report page**: a single HTML file that walks you through the result one idea per screen (verdict, brutal facts, Hedgehog, flywheel, stop doing, people, plan, risks, gate log). A "Show all" switch turns it into one printable page. It works offline, on a phone, and in light or dark mode, and every inferred figure is flagged as an assumption.
+
+The report covers:
 
 - **The Hedgehog Concept:** the one thing the subject can be best in the world at, that drives its economic (or resource) engine and that its people care about, in one sentence.
 - **The flywheel:** how each win feeds the next, and which link is weakest.
@@ -49,7 +51,8 @@ It works in two modes:
 [examples/linewright](examples/linewright) shows a full run on a fictional solo-founder desktop app:
 
 - [dossier.md](examples/linewright/dossier.md): the input, the founder's notes.
-- [output.md](examples/linewright/output.md): the skill's output.
+- [report.html](examples/linewright/report.html): the guided report page. Download it and open it in a browser.
+- [output.md](examples/linewright/output.md): the same analysis as plain markdown.
 
 The verdict opens with:
 
@@ -86,6 +89,18 @@ Each output was graded against an answer key by a separate judge model, never by
 - **On 16 cases held back until the end,** it scored **93.95 vs 92.02**.
 
 The gain is consistent but modest. The full method, the numbers and the limits are in the evaluation repo: **[good-to-great-eval](https://github.com/KShervington/good-to-great-eval)**.
+
+The report page (v1.1) was added after the evaluation. It changes how the result is presented, not the analysis: the gates, wording and content rules are the ones that were tested.
+
+## Repo layout
+
+| Path | What it is |
+|---|---|
+| `skills/good-to-great-anything/SKILL.md` | The skill. |
+| `skills/good-to-great-anything/assets/report-template.html` | The report page. The skill fills in its JSON block. |
+| `skills/good-to-great-anything/assets/report-schema.md` | The JSON fields the page reads. |
+| `examples/linewright/` | A worked example: input, report page, markdown output and the page's data. |
+| `tools/build_report.py` | Rebuilds a report page from a JSON file: `python tools/build_report.py data.json out.html`. |
 
 ## Limits worth knowing
 

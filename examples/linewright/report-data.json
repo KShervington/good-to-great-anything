@@ -1,0 +1,136 @@
+{
+  "subject": "Linewright",
+  "subject_type": "Solo-founder product (desktop software)",
+  "as_of": "end of Q3, Year 0",
+  "mode": "autonomous",
+  "state": "good",
+  "verdict": {
+    "headline": "Good, not yet great. The core is eroding quietly while the founder considers a new product.",
+    "hedgehog": "Linewright makes every professional subtitle file pass the client's delivery spec the first time. The studio sets the rules once, every freelancer's editor enforces them, and the business earns from seats that renew.",
+    "weakest_link": "Profit isn't turning into spec-checker progress. Your hours go to licensing tickets and bug-fix releases.",
+    "top_stop": ["Linewright Lite", "The Linux port", "Competing on auto-align"],
+    "brutal_fact": "Renewals fell four quarters in a row (64% → 52%), below your 58% model. Lantern's free auto-align is the reason 69% of buyers chose you, and it ships stable this winter.",
+    "missing_numbers": ["The renewal rate split into studios vs. individuals", "Where your 39 studios came from"],
+    "confidence": { "level": "moderate", "rests_on": "The facts are solid. The Hedgehog rests on studio calls and one survey." }
+  },
+  "greatness_potential": 22,
+  "takeaways": {
+    "hedgehog": "Be the tool that makes subtitle files pass spec the first time",
+    "people": "Hire part-time support first, then a release backup"
+  },
+  "great_version": "The reference tool for spec-compliant subtitles. A studio loads a broadcaster's delivery rules once, and every freelancer's file then passes QC on the first try, with a per-file report to prove it. Studio seats are most of the revenue and almost never churn. It runs on a small, calm team and stays narrow: not a creator app, not a Linux project, not a workflow platform.",
+  "hedgehog": {
+    "sentence": "Linewright makes every professional subtitle file pass the client's delivery spec the first time, with rules set once by the studio and enforced in every freelancer's editor, and earns its living from seats that renew.",
+    "circles": {
+      "best": { "kept": "Spec compliance at the point of editing, backed by a pro keyboard workflow built by an 11-year subtitler", "ruled_out": ["Auto-align (becoming a commodity)", "Workflow management (the cloud platform is stronger)", "Low price (a position, not a capability)", "Creator captioning"] },
+      "engine": { "kept": "Recurring profit per renewing seat", "ruled_out": ["Profit per new license (one-time, down 23% YoY)"] },
+      "passion": { "kept": "The professional subtitling craft `[ASSUMPTION: inferred from your history]`", "ruled_out": ["Creator captions: Marisol's passion, not yours"] }
+    },
+    "denominator": "**Recurring profit per renewing seat.** Recurring revenue (studio subscriptions plus update renewals) is $114.1k, 54% of trailing-12-month revenue.",
+    "tests": [
+      { "name": "Explains past wins?", "result": "Mostly", "note": "Studios renew and credit the spec checker. It doesn't explain the auto-align-driven individual sales, which is exactly the part under threat." },
+      { "name": "Rules things out?", "result": "Yes", "note": "The creator app, Linux, and an auto-align arms race." },
+      { "name": "Uncomfortable?", "result": "Yes", "note": "It stops treating the 69% headline feature as the differentiator and turns down a warm opportunity." }
+    ],
+    "confirmation_tests": [
+      "Split the renewal rate. The Hedgehog holds if studio renewals are clearly above individual ones `[ASSUMPTION: threshold ≥85% studio]`.",
+      "Get before/after QC rejection data from at least two studios.",
+      "Ask 20 non-renewing individuals why they left.",
+      "Trace the origin of the last 10 studios."
+    ]
+  },
+  "flywheel": {
+    "steps": [
+      { "short": "Deepest library of delivery specs", "detail": "Specs as checkable presets." },
+      { "short": "Studios set rules once", "detail": "QC rejections drop, proven by per-studio pass reports." },
+      { "short": "Studios require Linewright", "detail": "Freelancers become fluent." },
+      { "short": "Freelancers carry it to new studios", "detail": "New studio seats. Not yet proven." },
+      { "short": "More renewing seats", "detail": "Higher recurring profit per seat." },
+      { "short": "Profit buys time and help", "detail": "More specs, reporting and stability." }
+    ],
+    "weakest": { "from": 6, "to": 1, "why": "The surplus exists (about $60k retained, $88k in the bank), but it isn't buying spec-engine progress. Your 50 hours go to about 30 install and licensing tickets a week, and the last two releases were bug fixes." },
+    "current_push": ["Free your hours: remove the root causes of licensing and install tickets and add part-time support.", "Ship proof: per-studio QC pass reporting, plus SSO for the three studios that asked."],
+    "doom_loop": "Not in one, but close. Four options you keep circling, a six-month pivot into a different market, and a Linux port started because of forum requests. A creator pivot right after Lantern's release would be the classic doom-loop move."
+  },
+  "stop_doing": [
+    { "text": "Building Linewright Lite", "why": "A different product, buyer and platform, and six months of the only engineer's time during the core's riskiest six months. The waitlist came from one borrowed post, and the \"50x market\" figure is unverified." },
+    { "text": "The Linux port", "why": "46 forum requests is not a business case unless a paying studio needs it." },
+    { "text": "Competing on auto-align", "why": "Keep it at parity and stop making it the headline." },
+    { "text": "Treating the 140-item backlog as a plan", "why": "Close anything that doesn't serve spec compliance, studio value or stability." },
+    { "text": "Answering licensing and install tickets by hand", "why": "Find the top three causes and remove them." },
+    { "text": "Explaining numbers with stories", "why": "\"Summer\" can't explain a year-over-year drop for the same quarter." },
+    { "text": "Reporting one blended renewal rate", "why": "It hides whether the part that compounds is healthy." }
+  ],
+  "brutal_facts": [
+    { "fact": "Renewals are falling and not leveling off", "evidence": "64 → 58 → 55 → 52%, against a modeled floor of 58%", "severity": "high", "owner": "You" },
+    { "fact": "New-license demand is down, not seasonal", "evidence": "Q3: 161 vs. 209 last year (−23%). A year-over-year comparison already cancels out summer.", "severity": "high", "owner": "You" },
+    { "fact": "The main reason people buy is about to be free", "evidence": "69% of buyers cite auto-align. Lantern ships it stable \"this winter.\"", "severity": "high", "owner": "You" },
+    { "fact": "You can't see whether studios are churning", "evidence": "Renewals are reported blended. Studios are 30% of revenue and the part that compounds.", "severity": "high", "owner": "Accountant + you" },
+    { "fact": "The business depends on one person", "evidence": "50 hours a week, one week off, no one else can ship.", "severity": "high", "owner": "You" },
+    { "fact": "The price rise roughly broke even but shrank the user base", "evidence": "64% × $39 ≈ $25.0 vs. 52% × $49 ≈ $25.5 per renewal due", "severity": "medium", "owner": "You" },
+    { "fact": "Support load is mostly self-inflicted", "evidence": "About 30 tickets a week, mostly install and licensing.", "severity": "medium", "owner": "You" },
+    { "fact": "The core value claim is unmeasured", "evidence": "\"QC rejections cut by more than half\" comes from two anecdotes.", "severity": "medium", "owner": "You + studio partners" },
+    { "fact": "Growth is real but partly borrowed", "evidence": "Revenue +19.5% while new units fell. Price and studios carried it.", "severity": "medium", "owner": "Accountant" }
+  ],
+  "faith_statement": "Professional subtitles always have to pass someone's spec, and no free editor or workflow platform owns that problem the way a tool built by a subtitler can.",
+  "truth_climate": "Your notes record the bad numbers honestly, then explain them away. Add a quarterly one-page scorecard with split renewal rates and a cancellation-reason prompt.",
+  "bus": [
+    { "who": "You", "call": "move", "why": "From support desk and generalist to spec engine plus studio relationships." },
+    { "who": "Mac contractor", "call": "move", "why": "The natural release backup who can ship without you." },
+    { "who": "Accountant", "call": "keep", "why": "Their read matches the evidence. Have them produce the quarterly split-renewal numbers." },
+    { "who": "Two studio managers citing the QC cut", "call": "move", "why": "Make them design partners and the source of real rejection data." },
+    { "who": "Lisbon translator", "call": "keep", "why": "Send her something real this month." },
+    { "who": "Forum regulars", "call": "keep", "why": "Your early warning system on Lantern." },
+    { "who": "Part-time support person", "call": "add", "why": "About 10–15 hours a week `[ASSUMPTION: ~$20–30k a year]`. The $88k reserve covers it." },
+    { "who": "Release backup engineer", "call": "add", "why": "Probably the Mac contractor, with more hours." },
+    { "who": "Part-time salesperson", "call": "not_yet", "why": "Find out how studios actually arrive first." },
+    { "who": "Marisol, as a Lite partner", "call": "off", "why": "Not a judgment of her. Her endeavor is creators, and Linewright's isn't." },
+    { "who": "50-hour weeks with one week off", "call": "off", "why": "The biggest single risk to endurance." }
+  ],
+  "next_90_days": [
+    { "text": "Split the renewal number and talk to the people who left", "owner": "You + accountant", "when": "Weeks 1–3", "detail": "Studio vs. individual, before and after the price rise and the Lantern nightlies. Email 20 non-renewers." },
+    { "text": "Decline Linewright Lite, kindly and in writing", "owner": "You", "when": "Week 1", "detail": "Thank Marisol and say no for now. Thank the Lisbon translator the same week." },
+    { "text": "Free your hours", "owner": "You", "when": "Weeks 2–8", "detail": "Remove the top three ticket causes, hire part-time support, and brief the contractor as release backup." },
+    { "text": "Ship the studio proof release", "owner": "You + Mac contractor", "when": "By week 12", "detail": "Per-studio QC pass reporting, plus SSO if the three requesting studios justify it." },
+    { "text": "Get ready for Lantern's stable release", "owner": "You", "when": "By week 10", "detail": "Reposition the individual license around spec checking and pro speed, not alignment." }
+  ],
+  "scorecard": [
+    { "output": "Renewal rate, split", "current": "52% blended; split unknown", "target": "Studio ≥90%, individual ≥55% `[ASSUMPTION]`", "trajectory": "Studio retention ≥95%" },
+    { "output": "Studio seats", "current": "638 seats, 39 studios; recurring 54% of revenue", "target": "800 seats; recurring ≥60% `[ASSUMPTION]`", "trajectory": "Studios are most of the business" },
+    { "output": "Founder hours on Hedgehog work", "current": "~30 tickets a week, 50 hours", "target": "<10 tickets, ≤45 hours `[ASSUMPTION]`", "trajectory": "A release ships without the founder" }
+  ],
+  "risks": [
+    { "source": "Gate 2", "risk": "Founder is the single point of failure", "warning": "No one else can ship; bad numbers get stories", "clears": "Two weeks off and a release still ships" },
+    { "source": "Gate 5", "risk": "Hedgehog unconfirmed", "warning": "Split renewal and QC data unknown", "clears": "Studio renewal clearly above individual" },
+    { "source": "Gate 8", "risk": "Freelancer → new studio link unproven", "warning": "Studio acquisition source unknown", "clears": "The last 10 studios traced to freelancers" },
+    { "source": "Decline 3", "risk": "Denial of risk", "warning": "A second quarter below model with no investigation (**already true**)", "clears": "Action 1 done" },
+    { "source": "Decline 4", "risk": "Grasping for salvation after Lantern ships", "warning": "A big new direction within one quarter of the release", "clears": "Hold the line; push the flywheel" },
+    { "source": "Decline 5", "risk": "Burnout leads to sale or abandonment", "warning": "Releases stop; more than 55 hours a week", "clears": "Capacity metric on target" }
+  ],
+  "shared_root_problems": "One person carries all the capacity, and the key numbers are blended or unmeasured",
+  "recheck": "Re-score in about 90 days, at the end of Q4, with the split renewal rates, studio seats and ticket volume. Then re-run Gates 1, 5 and 8.",
+  "ideology": {
+    "values": ["Built by and for working subtitlers", "Files that pass, first time", "Respect the freelancer's speed and keyboard", "Honest, simple pricing"],
+    "purpose": "Make professional subtitling work get accepted, and make subtitles readable for the people who rely on them.",
+    "bhag": "Linewright's spec checker becomes the reference that broadcasters and streamers name in their own delivery specs.",
+    "mechanisms": ["A release pipeline someone else has run", "The spec library as versioned data with a contribution process", "A support playbook", "A quarterly scorecard produced without being asked"]
+  },
+  "gates": [
+    { "n": 0, "name": "Fit", "verdict": "PASS", "note": "Ongoing product, clear steward, multi-year horizon" },
+    { "n": 1, "name": "Baseline", "verdict": "PASS", "note": "Good, not yet great: $211.4k, +19.5%, profitable" },
+    { "n": 2, "name": "Level 5", "verdict": "CONDITIONAL", "note": "Humble and resolute; single point of failure" },
+    { "n": 3, "name": "First Who", "verdict": "CONDITIONAL", "note": "Support and release-backup seats missing" },
+    { "n": 4, "name": "Brutal facts", "verdict": "PASS", "note": "Severe but consistent with good" },
+    { "n": 5, "name": "Hedgehog", "verdict": "CONDITIONAL", "note": "Needs split renewal and QC data" },
+    { "n": 6, "name": "Discipline", "verdict": "PASS", "note": "Stop list of 7 items" },
+    { "n": 7, "name": "Technology", "verdict": "PASS", "note": "Auto-align moved to parity" },
+    { "n": 8, "name": "Flywheel", "verdict": "CONDITIONAL", "note": "Link 4 unproven, link 6 starved" },
+    { "n": 9, "name": "Built to Last", "verdict": "PASS", "note": "Light treatment" },
+    { "n": 10, "name": "Mighty Fall", "verdict": "CONDITIONAL", "note": "Stage 3 signs present" }
+  ],
+  "details": [
+    { "title": "Baseline sheet (Gate 1)", "body": ["Revenue $211.4k (+19.5%). Costs ~$31k. Founder pay ~$120k. ~$60k retained; $88k cash.", "3,400 licenses. 39 studios, 638 seats. The largest studio is 11.6% of seats, so concentration is modest."] },
+    { "title": "Tech triage (Gate 7)", "body": ["Accelerates: spec presets, shared style profiles, per-studio reporting, SSO.", "Parity: speech-model auto-align. Drop: Linux build, creator web app."] }
+  ],
+  "assumption_note": "Autonomous run: no evidence questions were asked and no web research was available."
+}
